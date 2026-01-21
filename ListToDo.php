@@ -1,27 +1,16 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-session_start();
+require 'db.php';
 
 if (!isset($_SESSION['ingelogd'])) {
     header('Location: login.php');
     exit;
 }
 
-$pdo = new PDO(
-    'mysql:host=localhost;dbname=taken_app;charset=utf8',
-    'root',
-    '',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
-
 $gebruikerId = $_SESSION['gebruiker_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['nieuw_doel'])) {
-        $stmt = $pdo->prepare(
-            'INSERT INTO doelen (gebruiker_id, tekst) VALUES (?, ?)'
-        );
+        $stmt = $pdo->prepare('INSERT INTO doelen (gebruiker_id, tekst) VALUES (?, ?)');
         $stmt->execute([$gebruikerId, $_POST['nieuw_doel']]);
     }
 
@@ -53,76 +42,64 @@ $stmt = $pdo->prepare(
 );
 $stmt->execute([$gebruikerId]);
 $doelen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo lijst</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
 
-echo '<!DOCTYPE html>';
-echo '<html>';
-echo '<head>';
-echo '<meta charset="UTF-8">';
-echo '<title>ListToDo</title>';
-echo '<style>
-    body
-    .container {
-        width: 400px;
-        margin: 60px auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-    }
-    h1 {
-        text-align: center;
-    }
-    form {
-        margin-bottom: 15px;
-    }
-    input[type="text"] {
-        width: 70%;
-        padding: 6px;
-    }
-    button {
-        padding: 6px 10px;
-        cursor: pointer;
-    }
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-    li {
-        padding: 8px;
-        margin-bottom: 6px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-radius: 4px;
-    }
-</style>';
-echo '</head>';
-echo '<body>';
+<div class="container mt-5">
+    <div class="card schaduw-kaart">
+        <div class="card-body inhoud-kaart">
 
-echo '<div class="container">';
+            <div class="d-flex justify-content-between align-items-center mb-3 kop-balk">
+                <h3 class="titel-pagina mb-0">Mijn taken</h3>
+                <form method="post">
+                    <button name="uitloggen" class="btn btn-outline-danger btn-sm knop-uitloggen">
+                        Uitloggen
+                    </button>
+                </form>
+            </div>
 
-echo '<form method="post" style="text-align:right">';
-echo '<button name="uitloggen">Uitloggen</button>';
-echo '</form>';
+            <form method="post" class="d-flex gap-2 mb-4 formulier-toevoegen">
+                <input
+                    type="text"
+                    name="nieuw_doel"
+                    class="form-control invoer-taak"
+                    placeholder="Nieuwe taak"
+                    required
+                >
+                <button type="submit" class="btn btn-primary knop-toevoegen">
+                    Toevoegen
+                </button>
+            </form>
 
-echo '<h1>Mijn ToDo lijst</h1>';
+            <ul class="list-group lijst-taken">
+                <?php foreach ($doelen as $doel): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center taak-item">
+                        <span class="taak-tekst">
+                            <?= htmlspecialchars($doel['tekst']) ?>
+                        </span>
+                        <form method="post">
+                            <button
+                                name="verwijder"
+                                value="<?= $doel['id'] ?>"
+                                class="btn btn-sm btn-danger knop-verwijderen"
+                            >
+                                ✕
+                            </button>
+                        </form>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
 
-echo '<form method="post">';
-echo '<input type="text" name="nieuw_doel" required>' ;
-echo '<button type="submit">Toevoegen</button>';
-echo '</form>';
+        </div>
+    </div>
+</div>
 
-echo '<ul>';
-foreach ($doelen as $doel) {
-    echo '<li>';
-    echo htmlspecialchars($doel['tekst']);
-    echo '<form method="post">';
-    echo '<button name="verwijder" value="'.$doel['id'].'">✕</button>';
-    echo '</form>';
-    echo '</li>';
-}
-echo '</ul>';
-
-echo '</div>';
-
-echo '</body>';
-echo '</html>';
+</body>
+</html>

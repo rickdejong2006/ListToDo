@@ -1,14 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-session_start();
-
-$pdo = new PDO(
-    'mysql:host=localhost;dbname=taken_app;charset=utf8',
-    'root',
-    '',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
@@ -35,48 +26,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+?>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Inloggen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
 
-echo '<!DOCTYPE html>';
-echo '<html>';
-echo '<head>';
-echo '<meta charset="UTF-8">';
-echo '<title>Login</title>';
-echo '<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-    }
-    .container {
-        width: 320px;
-        margin: 100px auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
-    }
-    input {
-        width: 90%;
-        padding: 8px;
-        margin-bottom: 10px;
-    }
-    button {
-        padding: 8px 14px;
-        cursor: pointer;
-    }
-</style>';
-echo '</head>';
-echo '<body>';
+<div class="container d-flex justify-content-center align-items-center vh-100 pagina-login">
+    <div class="card schaduw-kaart" style="width: 350px;">
+        <div class="card-body inhoud-kaart">
+            <h3 class="text-center mb-4 titel-login">Inloggen</h3>
 
-echo '<div class="container">';
-echo '<h1>Login</h1>';
+            <form method="post" class="formulier-login">
+                <div class="mb-3">
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control invoer-email"
+                        placeholder="E-mail"
+                        required
+                    >
+                </div>
 
-echo '<form method="post">';
-echo '<input type="email" name="email" placeholder="Email" required>';
-echo '<input type="password" name="wachtwoord" placeholder="Wachtwoord" required>';
-echo '<button type="submit">Inloggen</button>';
-echo '</form>';
+                <div class="mb-3">
+                    <input
+                        type="password"
+                        name="wachtwoord"
+                        class="form-control invoer-wachtwoord"
+                        placeholder="Wachtwoord"
+                        required
+                    >
+                </div>
 
-echo '</div>';
+                <button type="submit" class="btn btn-primary w-100 knop-inloggen">
+                    Inloggen
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
-echo '</body>';
-echo '</html>';
+</body>
+</html>
