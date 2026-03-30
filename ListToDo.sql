@@ -1,16 +1,20 @@
-DROP DATABASE IF EXISTS `taken_app`;
 CREATE DATABASE IF NOT EXISTS taken_app;
+
 USE taken_app;
 
-CREATE TABLE IF NOT EXISTS gebruikers (
+DROP TABLE IF EXISTS doelen;
+DROP TABLE IF EXISTS gebruikers;
+
+CREATE TABLE gebruikers (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
     wachtwoord VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS doelen (
+CREATE TABLE doelen (
     id INT AUTO_INCREMENT PRIMARY KEY,
     gebruiker_id INT NOT NULL,
     tekst VARCHAR(255) NOT NULL,
-    FOREIGN KEY (gebruiker_id) REFERENCES gebruikers(id) ON DELETE CASCADE
+    voltooid TINYINT(1) NOT NULL DEFAULT 0,
+    FOREIGN KEY (gebruiker_id) REFERENCES gebruikers(id)
 );
