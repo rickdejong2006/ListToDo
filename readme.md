@@ -8,7 +8,7 @@ Gebruikers kunnen inloggen en hun eigen taken beheren.
 
 - Inloggen met e-mail en wachtwoord  
 - Automatisch account aanmaken  
-- Taken toevoegen en verwijderen  
+- Taken toevoegen, bewerken en verwijderen  
 - Taken per gebruiker opgeslagen  
 - Gebruik van sessions en JOIN queries  
 
@@ -24,7 +24,7 @@ Gebruikers kunnen inloggen en hun eigen taken beheren.
 - Start op xamp en start Apache en MySQL
 - Open php MyAdmin
 - Voer ListToDo.sql uit in php MyAdmin
-- Ga naar local host en open login.php
+- Ga naar local host en open login.php of ListToDo.php
 
 ### Tabellen
 - `gebruikers` (id, email, wachtwoord)
@@ -34,10 +34,12 @@ Gebruikers kunnen inloggen en hun eigen taken beheren.
 **login.php**
 - Logt gebruikers in
 - Maakt account aan als deze niet bestaat
+- Controleerd of het wachtwoord sterk genoeg is
 
 **ListToDo.php**
 - Laat taken zien
 - Taken toevoegen en verwijderen
+- Taken bewerken
 - Alleen toegankelijk als je ingelogd bent
 
 **db.php**
